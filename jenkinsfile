@@ -1,0 +1,20 @@
+node {
+  stage('checkout') {
+    git url: 'https://github.com/vrana22/MavenJunitLocalProj2.git'
+  }
+  
+  stage('build') {
+    def Mvnhome = tool 'M3'
+    if(isUnix()) {
+      sh "'${Mvnhome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
+    } else {
+      bat(/"${mvnHome}\bin\mvn" -Dmaven.test.failure.ignore clean package/)
+    }
+  }
+  
+  stage('Test_Result') {
+    junit '**/target/surefire-reports/Test-*.xml'
+    archive/*.jar
+  }
+  
+}
